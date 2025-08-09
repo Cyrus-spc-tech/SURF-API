@@ -8,7 +8,7 @@ def news():
     data = response.json()
     articles = data.get('articles', [])
 
-    for article in articles:
+    for i, article in enumerate(articles, 1):
         title = article.get('title', 'No title available')
         source = article.get('source', {}).get('name', 'Unknown source')
         description = article.get('description', 'No description available')
