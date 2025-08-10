@@ -1,0 +1,7 @@
+import requests 
+from PIL import Image 
+from io import BytesIO
+
+r = requests.get("https://imgs.search.brave.com/6KG9pyUO8Ja57RRY9FThv4p-DL3AaScWZm-sG7tRI7E/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy90/aHVtYi9iL2I2L0lt/YWdlX2NyZWF0ZWRf/d2l0aF9hX21vYmls/ZV9waG9uZS5wbmcv/OTYwcHgtSW1hZ2Vf/Y3JlYXRlZF93aXRo/X2FfbW9iaWxlX3Bo/b25lLnBuZw")
+i = Image.open(BytesIO(r.content))
+i.show()
