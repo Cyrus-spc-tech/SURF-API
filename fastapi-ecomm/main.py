@@ -19,11 +19,17 @@ def list_prod(
     max_length=50, 
     description="Search for a product name: "
     ),
-    sort_by_price:bool =Query(
-        default=False,
-        description="Sort product by price "
+
+    sort_by_price:bool =Query(default=False,description="Sort product by price "
     ),
+
     order:str = Query(default="asc",description="Sort order by (asc,desc)"),
+
+    limit:int=Query(default=5, 
+    ge=1, 
+    le=100, 
+    description="Limit of item")
+
 ):
     products = get_all_prod()
 
@@ -45,9 +51,10 @@ def list_prod(
 
 
     total = len(products)
+    products = products[0:limit]
     
 
 
 
 
-    return {"total": total, "items": products}
+    return {"total": total,"fetched ":limit, "items": products}
