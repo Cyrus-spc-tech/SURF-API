@@ -28,7 +28,11 @@ def list_prod(
     limit:int=Query(default=5, 
     ge=1, 
     le=100, 
-    description="Limit of item")
+    description="Limit of item"),
+
+    offset:int=Query(default=0, 
+    ge=0, 
+    description="Pagination offset"),
 
 ):
     products = get_all_prod()
@@ -51,7 +55,8 @@ def list_prod(
 
 
     total = len(products)
-    products = products[0:limit]
+    # products = products[offset:offset+limit]
+    products=products[0:limit]
     
 
 
