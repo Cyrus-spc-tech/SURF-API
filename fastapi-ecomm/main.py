@@ -33,8 +33,7 @@ def list_prod(
     offset:int=Query(default=0, 
     ge=0, 
     description="Pagination offset"),
-
-):
+    ):
     products = get_all_prod()
 
     if name:
@@ -61,5 +60,14 @@ def list_prod(
 
 
 
-
     return {"total": total,"fetched ":limit, "items": products}
+
+
+@app.get("/product/{product_id}")
+def get_prod_byidd(product_id:str):
+    prod=get_all_prod()
+    for product in prod:
+        if product["id"]==product_id:
+            return product
+
+    raise HTTPException(status_code=404,detail="not found")
