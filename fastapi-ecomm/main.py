@@ -1,6 +1,6 @@
 from app.services.products import get_all_prod
 from fastapi import FastAPI , HTTPException, Query ,Path
-from pydantic import BaseModel
+from schema.product import Product
 
 
 app = FastAPI()
@@ -82,10 +82,6 @@ def get_prod_byidd(product_id:str =  Path(
 
 
 
-class Product(BaseModel):
-    id:str 
-    sku:str 
-    name:str
 
 @app.post("/product",status_code=201)
 def create_product(product : Product):
