@@ -74,7 +74,7 @@ def upload_page():
         with st.spinner("Uploading..."):
             files = {"file": (uploaded_file.name, uploaded_file.getvalue(), uploaded_file.type)}
             data = {"caption": caption}
-            response = requests.post("http://localhost:8000/upload", files=files, data=data, headers=get_headers())
+            response = requests.post("http://127.0.01:8000/upload", files=files, data=data, headers=get_headers())
 
             if response.status_code == 200:
                 st.success("Posted!")

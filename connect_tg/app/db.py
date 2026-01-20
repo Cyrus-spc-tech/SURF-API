@@ -4,13 +4,6 @@ from sqlalchemy import Column, String, Text, DateTime, ForeignKey
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase, relationship
 from datetime import datetime
-from fastapi_users.db.base import BaseUserDatabase
-try:
-    from fastapi_users.db.sqlalchemy import SQLAlchemyBaseUserTableUUID, SQLAlchemyUserDatabase
-except ImportError:
-    # Fallback for newer versions
-    from fastapi_users.db import SQLAlchemyUserDatabase
-    from fastapi_users.models import BaseUser as SQLAlchemyBaseUserTableUUID
 from fastapi import Depends
 
 DATABASE_URL = "sqlite+aiosqlite:///./test.db"
@@ -20,7 +13,15 @@ class Base(DeclarativeBase):
     pass
 
 
-class User(SQLAlchemyBaseUserTableUUID, Base):
+class User(Base):
+    __tablename__ = "user"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    email = Column(String, unique=True, nullable=False)
+    hashed_password = Column(String, nullable=False)
+    is_active = Column(String, default=True)
+    is_verified = Column(String, default=False)
+    
     posts = relationship("Post", back_populates="user")
 
 
@@ -52,6 +53,5 @@ async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
         yield session
 
 
-
-async def get_user_db(session: AsyncSession = Depends(get_async_session)):
-    yield SQLAlchemyUserDatabase(session, User)
+async def get_user_db(session: AsyncSession):
+    yield session
