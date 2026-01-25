@@ -1,17 +1,15 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-app =FastAPI()
+app = FastAPI()
 
-class ExpInput(BaseModel):
-    expInput:float
+class ExperienceInput(BaseModel):
+    exp: float
 
 @app.post("/predict")
-def prediction(data:ExpInput):
-    #can change this with ML model
-    salary = data.expInput*5000+10000
-
+def predict_salary(data: ExperienceInput):
+    salary = data.exp * 5000 + 10000
     return {
-        "experience": data.expInput,
-        "salary":salary
+        "experience": data.exp,
+        "predicted_salary": salary
     }
