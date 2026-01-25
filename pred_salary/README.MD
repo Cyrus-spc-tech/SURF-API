@@ -2,12 +2,16 @@
 
 ### Simple salary Prediction 
 
-User → Streamlit UI
-        ↓
-  Streamlit sends data (HTTP POST)
-        ↓
-     FastAPI receives it
-        ↓
-   FastAPI calculates result
-        ↓
-   Streamlit displays result
+Dataset
+   ↓
+Train ML Model (train_model.py)
+   ↓
+Save model.pkl
+   ↓
+FastAPI loads model
+   ↓
+Streamlit sends input
+   ↓
+FastAPI predicts
+   ↓
+Streamlit shows result
