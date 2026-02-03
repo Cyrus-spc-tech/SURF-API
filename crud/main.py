@@ -16,6 +16,7 @@ items_db:Dict[int,Item]={}
 
 
 #create
+
 @app.post("/item/{item_id}")
 def create_item(item_id: int , item : Item):
     if item_id in items_db:
@@ -26,6 +27,7 @@ def create_item(item_id: int , item : Item):
 
 
 #read 
+
 @app.get("/items/{item_id}")
 def read_item(item_id : int):
     if item_id not in items_db:
@@ -39,4 +41,27 @@ def read_item(item_id : int):
 def read_all():
     return items_db
 
+
+
+
+# update 
+
+@app.put("/items/{item_id}")
+def update_item(item_id: int, item: Item):
+    if item_id not in items_db:
+        raise HTTPException(status_code=404, detail="Item not found")
+    # Update the item in the dictionary
+    items_db[item_id] = item
+    return {"message": "Item updated", "item": item}
+
+
+
+# delete 
+
+@app.delete("/items/{item_id}")
+def delete_item(item_id: int):
+    if item_id not in items_db:
+        raise HTTPException(status_code=404, detail="Item not found")
+    del items_db[item_id]
+    return {"message": "Item deleted"}
 
