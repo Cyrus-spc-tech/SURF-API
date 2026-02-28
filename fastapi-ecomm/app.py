@@ -1,9 +1,14 @@
-from app.services.products import get_all_prod
-from fastapi import FastAPI , HTTPException, Query ,Path
+from services.products import get_all_prod
+from fastapi import FastAPI , HTTPException, Query ,Path, Request
 from schema.product import Product
-
+from fastapi.templating import Jinja2Templates
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory="templates")
 
 # @app.get("/product")
 # def get_prod():
@@ -65,8 +70,8 @@ def list_prod(
     return {"total": total,"fetched ":limit, "items": products}
 
 
-@app.get("/product/{product_id}")
-def get_prod_byidd(product_id:str =  Path(
+@app.get("/product/{product_id}",response_class=HTMLResponse)
+def get_prod_byidd(request: Request,product_id:str =  Path(
 
     ...,
     min_length=36,
@@ -77,7 +82,12 @@ def get_prod_byidd(product_id:str =  Path(
         if product["id"]==product_id:
             return product
 
-    raise HTTPException(status_code=404,detail="not found")
+    # raise HTTPException(status_code=404,detail="not found")
+    return templates.TemplateResponse(
+        request=request,
+        name="item.html",
+        context={"item_id": product_id, "request": request}  
+    )
 
 
 
