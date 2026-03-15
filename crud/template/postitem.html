@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Items</title>
+    <style>
+        .body{
+            justify-content: center;
+            align-items: center;
+            background-color: rgb(255, 255, 184);
+        }
+        
+    </style>
+</head>
+<body>
+    <h1>Add the Item you want to add in db</h1>
+    <form method="post" action="/item/{{ item_id }}">
+        <label for= "item_id">Item_ID:</label>
+        <input type="text" id="item_id" name="item_id" required><br><br>
+
+
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+
+        <label for="price">Price:</label>
+        <input type="text" id="price" name="price" required><br><br>
+
+        <label for="Quantity">Quantity</label>
+        <input type="text" id="quantity" name="quantity" required><br><br>
+
+
+        <label for="description">Description:</label>
+        <textarea  id="description" name="description" ></textarea><br><br>
+
+
+
+        <button type="submit"> >>> Add Item >>> </button>
+
+</form>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% if item %}
+    <h2>Item Details</h2>
+    <p><strong>ID:</strong> {{ item_id }}</p>
+    <p><strong>Name:</strong> {{ item.name }}</p>
+    <p><strong>Price:</strong> ${{ item.price }}</p>
+    <p><strong>Quantity:</strong> {{ item.quantity }}</p>
+    <p><strong>Description:</strong> {{ item.description or "N/A" }}</p>
+{% elif items %}
+    <h2>All Items</h2>
+    {% if items %}
+        {% for id, item in items.items() %}
+            <div style="border: 1px solid #ccc; padding: 10px; margin: 10px;">
+                <h3>{{ item.name }}</h3>
+                <p>ID: {{ id }} | Price: ${{ item.price }} | Quantity: {{ item.quantity }}</p>
+                <p>{{ item.description or "No description" }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No items found.</p>
+    {% endif %}
+{% else %}
+    <p>No item data available.</p>
+{% endif %}
+</body>
+</html>
