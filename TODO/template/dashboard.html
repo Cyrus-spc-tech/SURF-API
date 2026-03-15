@@ -5,19 +5,85 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todo Dashboard</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 40px; }
-        .container { max-width: 800px; margin: 0 auto; }
-        
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #333; text-align: center; margin-bottom: 30px; }
+        .add-todo { background: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 20px; }
+        .add-todo:hover { background: #45a049; }
+        .todo-item { padding: 15px; border: 1px solid #ddd; margin: 10px 0; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; }
+        .todo-item.completed { background: #f0f0f0; text-decoration: line-through; }
+        .todo-actions { display: flex; gap: 10px; }
+        .btn { padding: 5px 10px; border: none; border-radius: 3px; cursor: pointer; }
+        .btn-edit { background: #2196F3; color: white; }
+        .btn-delete { background: #f44336; color: white; }
+        .empty-state { text-align: center; color: #666; padding: 40px; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Todo Dashboard</h1>
         <p>Welcome to Todo application!</p>
-        <div class="todo-item">
-            
-            
-        </div>
+ 
+        <button class="add-todo" onclick="addTodo()">+ Add New Todo</button>
+ 
+        {% if todos %}
+            {% for todo in todos %}
+            <div class="todo-item {% if todo.completed %}completed{% endif %}">
+                <div>
+                    <h3>{{ todo.title }}</h3>
+                    <p>{{ todo.description }}</p>
+                    <small>Status: {% if todo.completed %}Completed{% else %}Pending{% endif %}</small>
+                </div>
+                <div class="todo-actions">
+                    <button class="btn btn-edit" onclick="editTodo({ {todo_id }})">Edit</button>
+                    <button class="btn btn-delete" onclick="deleteTodo({ {todo_id }})">Delete</button>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <h3>No todos yet!</h3>
+                <p>Click "Add New Todo" to get started.</p>
+            </div>
+        {% endif %}
     </div>
+ 
+    <script>
+        function addTodo() {
+            const title = prompt("Enter todo title:");
+            if (title) {
+                const description = prompt("Enter todo description:");
+                fetch('/todos/', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({title, description, completed: false})
+                }).then(() => location.reload());
+            }
+        }
+ 
+        function editTodo(id) {
+            fetch(`/todos/${id}`)
+                .then(res => res.json())
+                .then(todo => {
+                    const title = prompt("Edit title:", todo.title);
+                    if (title !== null) {
+                        const description = prompt("Edit description:", todo.description);
+                        const completed = confirm("Mark as completed?");
+                        fetch(`/todos/${id}`, {
+                            method: 'PUT',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({title, description, completed})
+                        }).then(() => location.reload());
+                    }
+                });
+        }
+ 
+        function deleteTodo(id) {
+            if (confirm("Are you sure you want to delete this todo?")) {
+                fetch(`/todos/${id}`, {method: 'DELETE'})
+                    .then(() => location.reload());
+            }
+        }
+    </script>
 </body>
 </html>
