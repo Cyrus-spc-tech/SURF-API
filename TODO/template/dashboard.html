@@ -35,8 +35,8 @@
                     <small>Status: {% if todo.completed %}Completed{% else %}Pending{% endif %}</small>
                 </div>
                 <div class="todo-actions">
-                    <button class="btn btn-edit" onclick="editTodo({ {todo_id }})">Edit</button>
-                    <button class="btn btn-delete" onclick="deleteTodo({ {todo_id }})">Delete</button>
+                    <button class="btn btn-edit" onclick="editTodo({{ todo.id }})">Edit</button>
+                    <button class="btn btn-delete" onclick="deleteTodo({{ todo.id }})">Delete</button>
                 </div>
             </div>
             {% endfor %}
