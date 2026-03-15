@@ -1,6 +1,8 @@
 from sqlalchemy import Column, Integer, String, Boolean
 from database.database import Base
 
+# table column handle 
+
 class Todo(Base):
     __tablename__ = "todos"
 

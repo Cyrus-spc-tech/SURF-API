@@ -2,3 +2,4 @@ uvicorn
 FastAPI
 sqlalchemy
 pydantic
+jinja2

@@ -6,13 +6,18 @@ from schemas.schema import TodoCreate, TodoUpdate, TodoResponse
 
 router = APIRouter()
 
-def get_db():
+
+def get_db():  # noqa: F811
     db = SessionLocal()
     try:
         yield db
     finally:
         db.close()
 
+
+
+
+# add in the list   
 
 @router.post("/", response_model=TodoResponse)
 def create_todo(todo: TodoCreate, db: Session = Depends(get_db)):
@@ -27,6 +32,10 @@ def read_todos(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     todos = db.query(Todo).offset(skip).limit(limit).all()
     return todos
 
+
+# get the list 
+
+
 @router.get("/{todo_id}", response_model=TodoResponse)
 def read_todo(todo_id: int, db: Session = Depends(get_db)):
     todo = db.query(Todo).filter(Todo.id == todo_id).first()
@@ -34,6 +43,8 @@ def read_todo(todo_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Todo not found")
     return todo
 
+
+# upt the list 
 @router.put("/{todo_id}", response_model=TodoResponse)
 def update_todo(todo_id: int, todo: TodoUpdate, db: Session = Depends(get_db)):
     db_todo = db.query(Todo).filter(Todo.id == todo_id).first()
@@ -48,6 +59,8 @@ def update_todo(todo_id: int, todo: TodoUpdate, db: Session = Depends(get_db)):
     db.refresh(db_todo)
     return db_todo
 
+
+# del form list
 @router.delete("/{todo_id}")
 def delete_todo(todo_id: int, db: Session = Depends(get_db)):
     todo = db.query(Todo).filter(Todo.id == todo_id).first()
