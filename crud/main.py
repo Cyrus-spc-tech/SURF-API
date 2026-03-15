@@ -18,6 +18,10 @@ class Item(BaseModel):
 
 items_db:Dict[int,Item]={}
 
+@app.get("/")
+def home(request:Request):
+    return templates.TemplateResponse("mainhm.html",{"request":request})
+
 
 #create
 
