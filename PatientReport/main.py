@@ -1,4 +1,4 @@
-from fastapi import FastAPI 
+from fastapi import FastAPI , Path
 import json
 
 
@@ -24,7 +24,7 @@ def about():
 
 
 @app.get("/view")
-def view():
+def view(patient_id:str=Path(...,description="Id of the patient in DB ",example='P001')):
     d= load_db()
 
 
