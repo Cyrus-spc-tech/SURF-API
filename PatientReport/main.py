@@ -1,6 +1,9 @@
-from fastapi import FastAPI , Path
-import json
 
+
+
+
+from fastapi import FastAPI , Path , HTTPException , Query
+import json
 
 
 app = FastAPI()
@@ -36,4 +39,26 @@ def fetch(p_id:str):
 
     if p_id in d:
         return d[p_id]
-    return {"message":"No Record Found "}
+    raise HTTPException(status_code=404,detail="Pation not found ")
+
+
+@app.get('/sort')
+def sort_p(sort_by:str= Query(...,description="Sort on bases of columns "), order:str=Query(...,description="sort in asc or desc")):
+
+    valid_f=['height','weight','bmi']
+
+    if sort_by not in valid_f:
+        raise HTTPException(ststus_code=400,detail=f"Invalid Field selected select from {valid_f}")
+
+    if order not in ['asc','desc']:
+        raise HTTPException(ststus_code=400,detail='Invalid order ')
+
+    
+    data = load_db()
+
+
+    sort_ord=True if order == 'desc' else False
+
+    sorted_db=sorted(data.values(),key=lambda x:x.get(sort_by,0),reverse=f"{sort_ord}")
+
+    return sorted_db
