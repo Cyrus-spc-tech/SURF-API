@@ -5,8 +5,38 @@
 from fastapi import FastAPI , Path , HTTPException , Query
 import json
 
+from pydantic import BaseModel ,Field, field_validator # EmailStr  >> email : EmailStr   # AnyUrl   
+from typing import List,Dict,Optional
+
+
 
 app = FastAPI()
+
+class Address(BaseModel):
+    state:str
+    city:str
+    pin:str
+
+class Patient(BaseModel):
+    name: str
+    age : int
+    marrid: Optional[bool] = None
+    address: Address
+    email : str
+
+
+    # @field_validator('email')
+    # @classmethod
+    # def email_verify(cls,val):
+    #     va=['gmail.com','hotmail.com','redmail.com']
+
+    #     dva=val.split('@')[-1]
+
+    #     if dva not in va :
+    #         raise ValueError("Not Found")
+
+    #     return val
+
 
 def load_db():
     with open('patient.json','r') as f:
@@ -62,3 +92,4 @@ def sort_p(sort_by:str= Query(...,description="Sort on bases of columns "), orde
     sorted_db=sorted(data.values(),key=lambda x:x.get(sort_by,0),reverse=f"{sort_ord}")
 
     return sorted_db
+ 
