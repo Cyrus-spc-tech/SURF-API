@@ -5,8 +5,8 @@
 from fastapi import FastAPI , Path , HTTPException , Query
 import json
 
-from pydantic import BaseModel ,Field, field_validator # EmailStr  >> email : EmailStr   # AnyUrl   
-from typing import List,Dict,Optional
+from pydantic import BaseModel ,Field,computed_field    # field_validator # EmailStr  >> email : EmailStr   # AnyUrl   
+from typing import List,Dict,Optional,Annotated,Literal
 
 
 
@@ -18,11 +18,32 @@ class Address(BaseModel):
     pin:str
 
 class Patient(BaseModel):
-    name: str
-    age : int
-    marrid: Optional[bool] = None
+
+    id:Annotated[str,Field(...,description="ID of the Patient",example=['P001'])]
+    name: Annotated[str,Field(...,description="Name of the Patient ")]
+    age : Annotated[int,Field(...,description="Age of the Patient ")]
+    gender:Annotated[Literal['Male','Female'],Field(...,"Gender of the Patient")]
+    height:Annotated[float,Field(...,description="Height of the Patient in mtrs")]
+    weight:Annotated[float,Field(...,description="Weight of the Patient in kgs")]
     address: Address
-    email : str
+
+
+    @computed_field
+    @property
+    def bmi(self) -> float:
+        bmi=round(self.weight/(self.height**2),2)
+
+        return bmi
+
+    @computed_field
+    @property
+    def verdict(self)-> str:
+        if self.bmi<18.5:
+            return 'UnderWeight'
+        elif self.bmi <25:
+            return 'Normal'
+        else:
+            return 'OverWeight'
 
 
     # @field_validator('email')
