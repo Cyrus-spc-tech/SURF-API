@@ -4,7 +4,7 @@
 
 from fastapi import FastAPI , Path , HTTPException , Query
 import json
-
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel ,Field,computed_field    # field_validator # EmailStr  >> email : EmailStr   # AnyUrl   
 from typing import List,Dict,Optional,Annotated,Literal
 
@@ -65,6 +65,10 @@ def load_db():
 
     return data 
 
+def save_db(data):
+    with open('patient.json','w') as f:
+        json.dump(data,f)
+
 
 
 @app.get("/")
@@ -114,3 +118,18 @@ def sort_p(sort_by:str= Query(...,description="Sort on bases of columns "), orde
 
     return sorted_db
  
+@app.post("/create")
+def create_patent(patient: Patient):
+    #load data 
+    data=load_db()
+
+    #check if exist
+    if patient.id in data :
+        return HTTPException(status_code=400,detail='Patient Alredy Exist')
+   
+    data[patient.id]=patient.model_dump(exclude={id}) #dict fix
+
+    save_db(data)
+
+
+    return JSONResponse(status_code=201,content={'message':'Patient has been Created '})
