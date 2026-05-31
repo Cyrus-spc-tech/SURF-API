@@ -46,6 +46,15 @@ class Patient(BaseModel):
             return 'OverWeight'
 
 
+class PatientUpdate(BaseModel):
+    name:  Annotated[Optional[str],Field(...,description="Name of the Patient ")]
+    age :  Annotated[Optional[int],Field(...,description="Age of the Patient ")]
+    gender:Annotated[Optional[Literal]['Male','Female'],Field(...,"Gender of the Patient")]
+    height:Annotated[Optional[float],Field(...,description="Height of the Patient in mtrs")]
+    weight:Annotated[Optional[float],Field(...,description="Weight of the Patient in kgs")]
+    address: Address
+
+
     # @field_validator('email')
     # @classmethod
     # def email_verify(cls,val):
@@ -133,3 +142,22 @@ def create_patent(patient: Patient):
 
 
     return JSONResponse(status_code=201,content={'message':'Patient has been Created '})
+
+
+@app.put("/update/{patientid}")
+def update_patient(patient_id:str,patient_upt:PatientUpdate):
+    data=load_db
+
+    if patient_id not in data:
+        return HTTPException(status_code=404,detail='Patient id not Found ')
+
+
+    exist_d=data[patient_id]
+
+    newinfo=patient_upt.model_dump(exclude_unset=True)# only sent by client
+
+    for key,value in newinfo.items():
+        exist_d[key]=value
+
+    data[patient_id]=exist_d
+    return exist_d
