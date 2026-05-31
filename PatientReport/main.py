@@ -49,7 +49,7 @@ class Patient(BaseModel):
 class PatientUpdate(BaseModel):
     name:  Annotated[Optional[str],Field(...,description="Name of the Patient ")]
     age :  Annotated[Optional[int],Field(...,description="Age of the Patient ")]
-    gender:Annotated[Optional[Literal]['Male','Female'],Field(...,"Gender of the Patient")]
+    gender:Annotated[Optional[Literal['Male','Female'],Field(...,"Gender of the Patient")]]
     height:Annotated[Optional[float],Field(...,description="Height of the Patient in mtrs")]
     weight:Annotated[Optional[float],Field(...,description="Weight of the Patient in kgs")]
     address: Address
@@ -159,5 +159,14 @@ def update_patient(patient_id:str,patient_upt:PatientUpdate):
     for key,value in newinfo.items():
         exist_d[key]=value
 
-    data[patient_id]=exist_d
-    return exist_d
+        # existing patient >> pydantic obj >> updated bmi +verdict >> pydantic obj >> dict
+         
+        exist_d['id']=patient_id
+        pyd_patient=Patient(**exist_d) 
+
+        exist_d=pyd_patient.model_dump(exclude='id')
+
+        data[patient_id]=exist_d
+
+        save_db(data)
+        return JSONResponse(status_code=200,content={'message':"Patient Updtaed"})
