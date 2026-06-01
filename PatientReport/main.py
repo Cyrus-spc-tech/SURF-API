@@ -19,12 +19,12 @@ class Address(BaseModel):
 
 class Patient(BaseModel):
 
-    id:Annotated[str,Field(...,description="ID of the Patient",example=['P001'])]
-    name: Annotated[str,Field(...,description="Name of the Patient ")]
-    age : Annotated[int,Field(...,description="Age of the Patient ")]
-    gender:Annotated[Literal['Male','Female'],Field(...,"Gender of the Patient")]
-    height:Annotated[float,Field(...,description="Height of the Patient in mtrs")]
-    weight:Annotated[float,Field(...,description="Weight of the Patient in kgs")]
+    id:Annotated[str,Field(default=..., description="ID of the Patient", example=['P001'])]
+    name: Annotated[str,Field(default=..., description="Name of the Patient ")]
+    age : Annotated[int,Field(default=..., description="Age of the Patient ")]
+    gender:Annotated[Literal['Male','Female'],Field(default=..., description="Gender of the Patient")]
+    height:Annotated[float,Field(default=..., description="Height of the Patient in mtrs")]
+    weight:Annotated[float,Field(default=..., description="Weight of the Patient in kgs")]
     address: Address
 
 
@@ -47,11 +47,11 @@ class Patient(BaseModel):
 
 
 class PatientUpdate(BaseModel):
-    name:  Annotated[Optional[str],Field(...,description="Name of the Patient ")]
-    age :  Annotated[Optional[int],Field(...,description="Age of the Patient ")]
-    gender:Annotated[Optional[Literal['Male','Female'],Field(...,"Gender of the Patient")]]
-    height:Annotated[Optional[float],Field(...,description="Height of the Patient in mtrs")]
-    weight:Annotated[Optional[float],Field(...,description="Weight of the Patient in kgs")]
+    name:  Annotated[Optional[str],Field(default=..., description="Name of the Patient ")]
+    age :  Annotated[Optional[int],Field(default=..., description="Age of the Patient ")]
+    gender:Annotated[Optional[Literal['Male','Female']],Field(default=..., description="Gender of the Patient")]
+    height:Annotated[Optional[float],Field(default=..., description="Height of the Patient in mtrs")]
+    weight:Annotated[Optional[float],Field(default=..., description="Weight of the Patient in kgs")]
     address: Address
 
 
