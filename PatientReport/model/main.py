@@ -8,7 +8,7 @@ import pickle
 
 
 
-with open('model.pkl','rb') as f:
+with open(r'D:\REPO\SURF-API\PatientReport\model\model.pkl','rb') as f:
     model=pickle.load(f)
 
 app=FastAPI()
@@ -37,7 +37,7 @@ class UserInput(BaseModel):
 @computed_field
 @property
 def bmi(self)-> float :
-    return self.weigth/(self.height**2)
+    return self.weight/(self.height**2)
 
 
 @computed_field
@@ -79,12 +79,11 @@ def city_tier(self)->str:
 def predict_prs(data:UserInput):
     ip_df=pd.DataFrame([{
         'bmi':data.bmi,
-        'age_group':data.age_group,
+        'age_group':data.age_grp,
         'life_risk':data.life_risk,
         'city_tier':data.city_tier,
         'income':data.income,
-        'occupation':data.occupation
+        'occupation':data.occupation,
         }])
-
-        predict = model.predict(ip_df)
-        return JSONResponse(status_code=200,content={"prediction value : "predict})
+    predicted = model.predict(ip_df)
+    return JSONResponse(status_code=200,content={"prediction value ":predicted})
