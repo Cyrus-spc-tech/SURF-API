@@ -1,7 +1,8 @@
 import pandas as pd
 import numpy as np 
+from fastapi.responses import JSONResponse
 from typing import Literal,Annotated
-from fastapi import FastAPI,Path,Query,HTTPException,JSONResponse
+from fastapi import FastAPI,Path,Query,HTTPException
 from pydantic import BaseModel,Field,computed_field
 import pickle
 
@@ -12,7 +13,15 @@ with open('model.pkl','rb') as f:
 
 app=FastAPI()
 
-
+t1 = ["Mumbai", "Delhi", "Bangalore", "Chennai", "Kolkata", "Hyderabad", "Pune"]
+t2 = [
+    "Jaipur", "Chandigarh", "Indore", "Lucknow", "Patna", "Ranchi", "Visakhapatnam", "Coimbatore",
+    "Bhopal", "Nagpur", "Vadodara", "Surat", "Rajkot", "Jodhpur", "Raipur", "Amritsar", "Varanasi",
+    "Agra", "Dehradun", "Mysore", "Jabalpur", "Guwahati", "Thiruvananthapuram", "Ludhiana", "Nashik",
+    "Allahabad", "Udaipur", "Aurangabad", "Hubli", "Belgaum", "Salem", "Vijayawada", "Tiruchirappalli",
+    "Bhavnagar", "Gwalior", "Dhanbad", "Bareilly", "Aligarh", "Gaya", "Kozhikode", "Warangal",
+    "Kolhapur", "Bilaspur", "Jalandhar", "Noida", "Guntur", "Asansol", "Siliguri"
+]
 
 # to validate incomming data
 
@@ -45,5 +54,37 @@ def life_risk(self)->str:
 
 @computed_field
 @property
-def     
-cd 
+def age_grp(self)->int:
+    if self.age<25:
+        return "young"
+    elif self.age <45:
+        return "adult"
+    elif self.age<60:
+        return "middle age"
+
+    else:
+        return "senior"
+
+@computed_field
+@property
+def city_tier(self)->str:
+    if self.city in t1:
+        return 1
+    elif self.city in t2:
+        return 2
+    else :
+        return 3
+
+@app.post("/predict")
+def predict_prs(data:UserInput):
+    ip_df=pd.DataFrame([{
+        'bmi':data.bmi,
+        'age_group':data.age_group,
+        'life_risk':data.life_risk,
+        'city_tier':data.city_tier,
+        'income':data.income,
+        'occupation':data.occupation
+        }])
+
+        predict = model.predict(ip_df)
+        return JSONResponse(status_code=200,content={"prediction value : "predict})
