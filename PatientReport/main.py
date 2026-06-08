@@ -146,7 +146,7 @@ def create_patent(patient: Patient):
 
 @app.put("/update/{patientid}")
 def update_patient(patient_id:str,patient_upt:PatientUpdate):
-    data=load_db
+    data=load_db()
 
     if patient_id not in data:
         return HTTPException(status_code=404,detail='Patient id not Found ')
