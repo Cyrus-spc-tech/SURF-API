@@ -112,10 +112,10 @@ def sort_p(sort_by:str= Query(...,description="Sort on bases of columns "), orde
     valid_f=['height','weight','bmi']
 
     if sort_by not in valid_f:
-        raise HTTPException(ststus_code=400,detail=f"Invalid Field selected select from {valid_f}")
+        raise HTTPException(status_code=400,detail=f"Invalid Field selected select from {valid_f}")
 
     if order not in ['asc','desc']:
-        raise HTTPException(ststus_code=400,detail='Invalid order ')
+        raise HTTPException(status_code=400,detail='Invalid order ')
 
     
     data = load_db()
@@ -123,7 +123,7 @@ def sort_p(sort_by:str= Query(...,description="Sort on bases of columns "), orde
 
     sort_ord=True if order == 'desc' else False
 
-    sorted_db=sorted(data.values(),key=lambda x:x.get(sort_by,0),reverse=f"{sort_ord}")
+    sorted_db=sorted(data.values(),key=lambda x:x.get(sort_by,0),reverse=sort_ord)
 
     return sorted_db
  
@@ -136,7 +136,7 @@ def create_patent(patient: Patient):
     if patient.id in data :
         return HTTPException(status_code=400,detail='Patient Alredy Exist')
    
-    data[patient.id]=patient.model_dump(exclude={id}) #dict fix
+    data[patient.id]=patient.model_dump(exclude={'id'}) #dict fix
 
     save_db(data)
 
@@ -179,12 +179,12 @@ def delete_patient(patient_id:str):
     data = load_db()
 
     if patient_id not in data:
-        raise HTTPException(ststus_code=404,detail='Patient not Found ')
+        raise HTTPException(status_code=404,detail='Patient not Found ')
 
     del data[patient_id]
 
     save_db(data)
 
-    return JSONResponse(ststus_code=200,content={'message':'Patient Deleted '})
+    return JSONResponse(status_code=200,content={'message':'Patient Deleted '})
 
     

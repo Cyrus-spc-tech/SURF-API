@@ -34,46 +34,44 @@ class UserInput(BaseModel):
     city:Annotated[str,Field(...,gt=0,lt=120,description="city of the User")]
     occupation: Annotated[Literal['retired', 'freelancer', 'student', 'government_job','business_owner', 'unemployed', 'private_job'], Field( ... , description='Occupation of the user')]
 
-@computed_field
-@property
-def bmi(self)-> float :
-    return self.weight/(self.height**2)
+    @computed_field
+    @property
+    def bmi(self)-> float :
+        return self.weight/(self.height**2)
 
+    @computed_field
+    @property
+    def life_risk(self)->str:
+        if self.smoker and self.bmi>30 :
+            return "high"
+        elif self.smoker and self.bmi >27:
+            return "medium"
 
-@computed_field
-@property
-def life_risk(self)->str:
-    if self.smoker and self.bmi>30 :
-        return "high"
-    elif self.smoker and self.bmi >27:
-        return "medium"
+        else:
+            return "low"
 
-    else:
-        return "low"
+    @computed_field
+    @property
+    def age_grp(self)->int:
+        if self.age<25:
+            return "young"
+        elif self.age <45:
+            return "adult"
+        elif self.age<60:
+            return "middle age"
 
+        else:
+            return "senior"
 
-@computed_field
-@property
-def age_grp(self)->int:
-    if self.age<25:
-        return "young"
-    elif self.age <45:
-        return "adult"
-    elif self.age<60:
-        return "middle age"
-
-    else:
-        return "senior"
-
-@computed_field
-@property
-def city_tier(self)->str:
-    if self.city in t1:
-        return 1
-    elif self.city in t2:
-        return 2
-    else :
-        return 3
+    @computed_field
+    @property
+    def city_tier(self)->str:
+        if self.city in t1:
+            return 1
+        elif self.city in t2:
+            return 2
+        else :
+            return 3
 
 @app.post("/predict")
 def predict_prs(data:UserInput):
