@@ -17,7 +17,7 @@ app = FastAPI()
 templates = Jinja2Templates(directory="Templates")
 
 # Mount static files
-app.mount("/static", StaticFiles(directory="Templates"), name="static")
+app.mount("/static", StaticFiles(directory="static"), name="static")
     
 
 
@@ -106,7 +106,7 @@ def about():
 
 
 @app.get("/view")
-def view(patient_id:str=Path(...,description="Id of the patient in DB ",example='P001')):
+def view():
     d= load_db()
 
 
