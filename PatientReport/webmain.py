@@ -95,6 +95,11 @@ def home():
     return {"message ":" Patient Management System API "}
 
 
+@app.get("/web")
+def web_interface(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
+
+
 @app.get("/about")
 def about():
     return {"message":"A fully functional Patient management system API to manage your record "}

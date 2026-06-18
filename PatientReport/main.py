@@ -12,6 +12,7 @@ from typing import List,Dict,Optional,Annotated,Literal
 
 app = FastAPI()
 
+
 class Address(BaseModel):
     state:str
     city:str
